@@ -5,15 +5,86 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    children:[
+      {
+        path:'/',
+        name:'main',
+        component:()=>import('../pages/Web/Main/Main.vue')
+      },
+      {
+        path:'/login',
+        name:'login',
+        component:()=>import('../pages/Web/Auth/Login.vue')
+      },
+      {
+        path:'/news-detail/:id',
+        component:()=>import('../pages/Web/News/NewsDetail.vue')
+      },
+      {
+        path:'account',
+        name:'account',
+        component:()=>import('../pages/Web/Account/AccoutView.vue')
+      },
+      {
+        path:'post-view',
+        name:'post-view',
+        component:()=>import('../pages/Web/Post/PostVIew.vue')
+      },
+      {
+        path:'post-list',
+        name:'post-list',
+        component:()=>import('../pages/Web/Post/PostList.vue')
+      },
+      {
+        path:'post-detail/:id',
+        name:'post-detail',
+        component:()=>import('../pages/Web/Post/PostDetail.vue')
+      }
+    ]
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path:'/admin',
+    name:'admin',
+    redirect: "/admin/dashboard",
+    component:()=>import ('../views/AdminView.vue'),
+    children:[
+      {
+        path:'dashboard',
+        name:'dashboard',
+        component:()=>import ('../pages/Admin/Dashboard/Dashboard.vue'),
+      },
+      {
+        path:'department',
+        name:'department',
+        component:()=>import ('../pages/Admin/Department/Department.vue')
+      },
+      {
+        path:'news',
+        name:'news',
+        component:()=>import ('../pages/Admin/News/News.vue'),
+      },
+      {
+        path:'newsbyid/:id',
+        name:'newsbyid',
+        component:()=>import('../pages/Admin/News/NewsById.vue')
+      },
+      {
+        path:'newsdetail/:id',
+        name:'newsdetail',
+        component:()=>import('../pages/Admin/News/NewsDetail.vue')
+      },
+      {
+        path:'user',
+        name:'user',
+        component:()=>import('../pages/Admin/User/UserView.vue')
+      },
+      {
+        path:'post',
+        name:'post',
+        component:()=>import('../pages/Admin/Post/Post.vue')
+      }
+    ]
   }
 ]
 
