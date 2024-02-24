@@ -6,17 +6,26 @@
                 <v-text-field v-model="search" @change="SearchData" placeholder="Nhập thông tin tìm kiếm"></v-text-field>
             </v-col>
         </v-row>
-        <v-row class="d-flex justify-center" v-for="(item, index) in news" :key="index">
-            <v-card width="1410" class="ma-5" variant="outlined" hover height="140">
-                <v-card-title>Tiêu đề {{ item.TieuDeTinTuc }} <span class="font-weight-regular">by {{
-                    item.UserId }}</span></v-card-title>
-                <v-card-subtitle>Ngày {{ formatDateTime(item.NgayDang) }}</v-card-subtitle>
-                <v-card-actions>
-                    <v-btn color="primary" :to="'/news-detail/' + item.NewsId">Đọc thêm</v-btn>
-                    <v-btn>Share</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-row>
+        <div v-if="news.length > 0">
+            <v-row class="d-flex justify-center" v-for="(item, index) in news" :key="index">
+                <v-card width="1410" class="ma-5" variant="outlined" hover height="140">
+                    <v-card-title>Tiêu đề {{ item.TieuDeTinTuc }} <span class="font-weight-regular">by {{
+                        item.FullName }}</span></v-card-title>
+                    <v-card-subtitle>Ngày {{ formatDateTime(item.NgayDang) }}</v-card-subtitle>
+                    <v-card-actions>
+                        <v-btn color="primary" :to="'/news-detail/' + item.NewsId">Đọc thêm</v-btn>
+                        <v-btn>Share</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-row>
+        </div>
+        <div v-else>
+            <v-row class="d-flex justify-center">
+                <h5>
+                    Không có dữ liệu
+                </h5>
+            </v-row>
+        </div>
     </div>
 </template>
 
@@ -29,6 +38,13 @@ export default {
             news: [],
             param: '',
             search: ''
+        }
+    },
+    watch: {
+        search: function (newValue, oldValue) {
+            if (newValue === '') {
+                this.GetNews();
+            }
         }
     },
     methods: {
@@ -50,7 +66,10 @@ export default {
             }).finally(() => { })
         },
         SearchData() {
-            alert(this.search)
+            this.news = this.news.filter(x =>
+                x.TieuDeTinTuc.toLowerCase().includes(this.search.toLowerCase()) ||
+                x.FullName.toLowerCase().includes(this.search.toLowerCase())
+            );
         }
     },
     mounted() {

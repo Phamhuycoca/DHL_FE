@@ -4,7 +4,7 @@
             <v-card width="1500">
                 <v-card-title class="text-center">Tiêu đề :{{ news.TieuDeTinTuc }} </v-card-title>
                 <v-card-item>
-                    Người đăng {{ news.UserId }} - ngày {{ formatDateTime(news.NgayDang) }}
+                    Người đăng {{ news.FullName }} - ngày {{ formatDateTime(news.NgayDang) }}
                 </v-card-item>
                 <div v-for="(item, index) in newscontent" :key="index" class="ma-10">
                     <v-card-text style="font-size: 20px;line-height: 1.8;">
@@ -114,6 +114,7 @@ export default {
             this.openLoading();
             newsAPI._getById(this.param).then(res => {
                 this.news = res.data;
+                console.log(res.data);
             }).catch(err => {
                 console.log(err);
             }).finally(() => {

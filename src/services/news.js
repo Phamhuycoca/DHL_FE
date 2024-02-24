@@ -18,6 +18,9 @@ const newsAPI = {
   },
   async _getById(id) {
     return await apiClient.get(`News/${id}`);
+  },
+  async _searchData(data){
+    return await apiClient.get(`News/SearchData/${data}`);
   }
 };
 

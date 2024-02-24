@@ -13,7 +13,7 @@
                                 <v-card-title>{{ item.DepartmentName }}</v-card-title>
                             </v-col>
                             <v-spacer></v-spacer>
-                            <v-col sm="12" md="12" lg="3">
+                            <v-col>
                                 <v-card-actions>
                                     <v-btn color="white" class="bg-green" :to="'newsbyid/' + item.DepartmentId">Tạo mới tin
                                         tức</v-btn>

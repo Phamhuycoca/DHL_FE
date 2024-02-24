@@ -3,7 +3,7 @@
         <v-row class="d-flex justify-center" v-for="(item, index) in news" :key="index">
             <v-card width="1300" class="ma-5" variant="outlined" hover height="140">
                 <v-card-title>Tiêu đề {{ item.TieuDeTinTuc }} <span class="font-weight-regular">by {{
-                    item.UserId }}</span></v-card-title>
+                    item.FullName }}</span></v-card-title>
                 <v-card-subtitle>Ngày {{ formatDateTime(item.NgayDang) }}</v-card-subtitle>
                 <v-card-actions>
                     <v-btn color="primary" :to="'/news-detail/' + item.NewsId">Đọc thêm</v-btn>
