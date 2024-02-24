@@ -26,7 +26,11 @@ const postAPI = {
   },
   async _getById(id) {
     return await apiClient.get(`Post/${id}`);
+  },
+  async _duyetBai(data) {
+    return await apiClient.post(`Post/DuyetBai`,data);
   }
+
 };
 
 export default postAPI;

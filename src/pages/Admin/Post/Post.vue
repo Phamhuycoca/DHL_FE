@@ -44,6 +44,7 @@
 
 <script>
 import postAPI from '../../../services/post'
+import { mapActions } from 'vuex';
 export default {
     name: 'PostView',
     data() {
@@ -55,15 +56,19 @@ export default {
         }
     },
     methods: {
+        ...mapActions('loadingStore', ['openLoading', 'closeLoading']),
         GetPost() {
+            this.openLoading();
             postAPI._getAllss().then(res => {
-                console.log(res.data);
                 this.posts = res.data;
             }).catch(err => {
                 console.log(err.data);
-            }).finally(() => { });
+            }).finally(() => {
+                this.closeLoading();
+            });
         },
         DuyetBai(item) {
+            this.openLoading();
             item.IsStatus = true;
             postAPI._update(item.PostId, item).then(res => {
                 console.log(res.data);
@@ -72,6 +77,8 @@ export default {
                 console.log(err.data);
             }).finally(() => {
                 this.GetPost();
+                this.closeLoading();
+
             });
         }
     },

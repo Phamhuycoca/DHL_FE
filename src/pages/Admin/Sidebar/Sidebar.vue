@@ -22,7 +22,7 @@ export default {
                 { icon: 'mdi-chart-bar', text: 'Trang chủ', link: '/admin/dashboard' },
                 { icon: 'mdi-chart-bar', text: 'Quản lý khoa', link: '/admin/department' },
                 { icon: 'mdi-note-text-outline', text: 'Quản lý tin tức', link: '/admin/news' },
-                { icon: 'mdi-note-text-outline', text: 'Quản lý bài viết', link: '/admin/post' },
+                // { icon: 'mdi-note-text-outline', text: 'Quản lý bài viết', link: '/admin/post' },
             ]
         }
     }
