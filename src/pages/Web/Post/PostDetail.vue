@@ -1,6 +1,7 @@
 <template>
     <div class="ma-10">
         <div>
+
             <v-row class="mt-8">
                 <v-col lg="12">
                     <v-card class="ma-10" variant="flat">
@@ -43,10 +44,11 @@
                     <v-list-item :title="item.UserId == getuserId ? `Tôi` : `${item.FullName}`"
                         :subtitle="`${item.CommentContent}`" :item="ol">
                         <template v-slot:prepend>
-                            <v-icon v-if="item.Avatar === null || item.Avatar === ''"
+                            <v-icon v-if="item.Avatar === null"
                                 :color="item.UserId == getId ? 'blue' : 'black'">mdi-account</v-icon>
                             <v-avatar v-else>
-                                <v-img :src="item.Avatar"></v-img>
+                                <v-img
+                                    src="https://platinumlist.net/guide/wp-content/uploads/2023/03/8359_img_worlds_of_adventure-big1613913137.jpg-1024x683.webp"></v-img>
                             </v-avatar>
                         </template>
                         <template v-slot:append>
@@ -73,7 +75,7 @@
                 </template>
             </v-virtual-scroll>
         </div>
-        <div class="ma-4">Bình luận: {{ comments.length }}</div>
+        <div class="ma-4">Bình luận: {{ GetsCommentsById(posts.PostId).length }}</div>
         <div class="mt-4">
             <v-row>
                 <v-col lg="11" md="6" sm="2">
@@ -160,7 +162,6 @@ export default {
         },
         GetsComments() {
             commentsPostAPI._getAll().then(res => {
-                console.log(res.data);
                 this.comments = res.data;
             }).catch(err => {
                 console.log(err.data);

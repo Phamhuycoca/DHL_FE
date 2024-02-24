@@ -35,7 +35,7 @@
                     </v-list>
                 </v-card>
             </v-menu> -->
-            <v-menu v-model="menu" :close-on-content-click="false" location="end">
+            <!-- <v-menu v-model="menu" :close-on-content-click="false" location="end">
                 <template v-slot:activator="{ props }">
                     <v-list-item icon v-bind="props" :prepend-avatar="userInfo.avatar"></v-list-item>
                 </template>
@@ -52,39 +52,76 @@
                             @click="confirmLogout"></v-list-item>
                     </v-list>
                 </v-card>
+            </v-menu> -->
+            <v-menu v-model="menu" :close-on-content-click="false" location="end" open-on-hover>
+                <template v-slot:activator="{ props }">
+                    <v-list-item icon v-bind="props"
+                        :prepend-avatar="userInfo.Avatar !== '' ? userInfo.Avatar : 'https://localhost:7125/Images/673eb8c4-cc38-4d4b-8dde-730653c71ad5.jpg'"></v-list-item>
+                </template>
+                <v-card max-width="300" width="300">
+                    <v-list>
+                        <v-list-item
+                            :prepend-avatar="userInfo.Avatar !== '' ? userInfo.Avatar : 'https://localhost:7125/Images/673eb8c4-cc38-4d4b-8dde-730653c71ad5.jpg'"
+                            :title="userInfo.FullName" :subtitle="userInfo.Email"></v-list-item>
+                    </v-list>
+                    <v-divider></v-divider>
+                    <v-list density="compact">
+                        <v-list-item prepend-icon="mdi-information" :to="'/admin/user'" title="Thông tin tài khoản"
+                            value="Thông tin tài khoản"></v-list-item>
+                        <v-list-item prepend-icon="mdi-logout" title="Đăng xuất" value="Đăng xuất"
+                            @click="confirm = true"></v-list-item>
+                    </v-list>
+                </v-card>
             </v-menu>
         </v-app-bar>
+        <confirm :message="'Bạn có muốn đăng xuất ?'" :confirm="confirm" @remove="Logout()" @close="confirm = false" />
     </div>
 </template>
     
 <script>
+import { mapGetters, mapActions } from 'vuex';
+import userAPI from '../../../services/user';
+import Confirm from '@/components/Confirm/Confirm.vue';
+import { useToast } from 'vue-toastification'
+const toast = useToast()
 export default {
     name: "NarbarView",
     data() {
         return {
             userInfo: {
-                avatar:
-                    "https://firebasestorage.googleapis.com/v0/b/thitracnghiem-830f0.appspot.com/o/category%2F1695722799093?alt=media&token=96ae3867-23e5-4a52-86c9-8de03bd1ba53",
-                name: "Phạm Khắc Huy",
-                email: "Phamkhachuy240702@gmail.com"
+                // avatar: "https://firebasestorage.googleapis.com/v0/b/thitracnghiem-830f0.appspot.com/o/category/1695722799093?alt=media&token=96ae3867-23e5-4a52-86c9-8de03bd1ba53",
+                // name: "Phạm Khắc Huy",
+                // email: "Phamkhachuyaaaaaaaaaaaa240702@gmail.com"
             },
             menu: false,
-            menu_bell: false
+            menu_bell: false,
+            confirm: false,
         };
     },
+    computed: {
+        ...mapGetters('authStore', ['getuserId'])
+    },
     methods: {
+        ...mapActions('authStore', ['Login', 'ResetToken']),
         Logout() {
-            this.$store.dispatch('Logout')
-            this.$router.push('/')
-
+            this.ResetToken();
+            toast.success('Đăng xuất thành công');
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1000);
         },
-        logout() {
-            this.$router.push("/");
-        },
-        confirmLogout() {
-            this.$refs.dialog.openDialog();
-        },
-    }
+        GetProfile() {
+            userAPI._getById(this.getuserId).then(res => {
+                this.userInfo = res.data;
+            }).catch(error => {
+                console.log(error);
+            });
+        }
+    },
+    mounted() {
+        this.GetProfile();
+    },
+    components: { Confirm }
 };
 </script>
 <style scoped>

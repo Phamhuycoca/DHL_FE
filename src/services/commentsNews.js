@@ -21,7 +21,8 @@ const commentsNewsAPI = {
   },
   async _getListById(id) {
     return await apiClient.get(`CommentNews/GetCommentsByUserId/${id}`);
-  }
+  },
+ 
 };
 
 export default commentsNewsAPI;

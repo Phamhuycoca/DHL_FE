@@ -58,7 +58,7 @@
                 </template>
             </v-virtual-scroll>
         </div>
-        <div class="ma-4">Bình luận: {{ comments.length }}</div>
+        <div class="ma-4">Bình luận: {{ GetsCommentsById(news.NewsId).length }}</div>
         <div class="mt-4">
             <v-row>
                 <v-col lg="11" md="6" sm="2">
@@ -125,7 +125,6 @@ export default {
             this.openLoading();
             newscontentAPI._getAll(this.param).then(res => {
                 this.newscontent = res.data;
-                console.log(res.data);
             }).catch(err => {
                 console.log(err.data);
             }).finally(() => {
@@ -146,7 +145,6 @@ export default {
         },
         GetsComments() {
             commentsNewsAPI._getAll().then(res => {
-                console.log(res.data);
                 this.comments = res.data;
             }).catch(err => {
                 console.log(err.data);

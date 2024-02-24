@@ -1,12 +1,17 @@
 <template>
     <div class="ma-10">
+        <v-row>
+            <v-spacer></v-spacer>
+            <v-col class="mr-7" cols="3" lg="3" sm="12">
+                <v-text-field v-model="search" @change="SearchData" placeholder="Nhập thông tin tìm kiếm"></v-text-field>
+            </v-col>
+        </v-row>
         <v-row justify="center" v-for="(item, index) in posts" :key="index">
             <v-col sm="3">
-                <router-link :to="'/blog-detail/' + item.PostId">
+                <router-link :to="'/post-detail/' + item.PostId">
                     <v-img class="align-end text-white img-zoom" height="300" :src="GetImagePostById(item.PostId)"
                         :lazy-src="GetImagePostById(item.PostId)" cover></v-img>
                 </router-link>
-
             </v-col>
             <v-col sm="7" class="d-flex flex-column">
                 <span class="font-weight-normal grey--text text-subtitle-1">
@@ -36,6 +41,7 @@ export default {
             posts: [],
             imagepost: [],
             loading: true,
+            search: ''
         };
     },
     methods: {
@@ -83,6 +89,9 @@ export default {
             }
             return 'https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg';
         },
+        SearchData() {
+            alert(this.search)
+        }
     },
     mounted() {
         this.GetPost();

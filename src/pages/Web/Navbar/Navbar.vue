@@ -14,15 +14,16 @@
                     to="/post-list">
                     Bài viết
                 </router-link>
-                <v-menu transition="slide-y-transition" open-on-hover>
+                <v-menu transition="slide-y-transition">
                     <template v-slot:activator="{ props }">
                         <div v-bind="props" style="margin-top:42px;" class="ml-4 text-subtitle-1 font-weight-regular">
                             Tin tức
                         </div>
                     </template>
                     <v-list style="margin-top:-40px;">
-                        <v-list-item v-for="(item, i) in departments" :key="i" style="cursor: pointer;">
-                            <v-list-item-title>{{ item.DepartmentName }}</v-list-item-title>
+                        <v-list-item v-for="(item, i) in  departments " :key="i" style="cursor: pointer;"
+                            @click="ChaneUrl(item.DepartmentId)">
+                            <v-list-item-title style="max-height: 100%;">{{ item.DepartmentName }}</v-list-item-title>
                         </v-list-item>
                     </v-list>
                 </v-menu>
@@ -45,7 +46,7 @@
                 <v-card class="rounded-lg" min-width="500">
                     <v-card-title class="ma-2">Thông báo</v-card-title>
                     <v-list class="mb-2" style="max-height: 400px;overflow-y: auto;">
-                        <v-list-item v-for="(item, index) in GetNotificationById(getuserId)" :key="index"
+                        <v-list-item v-for="( item, index ) in  GetNotificationById(getuserId) " :key="index"
                             @click="ChangeComemt(item)">
                             <v-list-item-title>
                                 <v-avatar class="mr-4">
@@ -54,9 +55,7 @@
                                 {{ item.FullName }}
                             </v-list-item-title>
                             <v-list-item v-if="item.NewsId !== null">Đã bình luận tin tức</v-list-item>
-                            <v-list-item v-if="item.PostId !== null">Đã bình luận bài
-                                viết
-                                của bạn</v-list-item>
+                            <v-list-item v-if="item.PostId !== null">Đã bình luận bài viết</v-list-item>
                         </v-list-item>
                     </v-list>
                     <!-- <v-list v-else>
@@ -102,8 +101,8 @@ import departmentAPI from '../../../services/department';
 import { mapGetters, mapActions } from 'vuex';
 import { useToast } from 'vue-toastification'
 import noticationAPI from '../../../services/notication';
-import userAPI from '../../../services/user';
 const toast = useToast()
+import userAPI from '../../../services/user';
 export default {
     name: "NarbarView",
     data() {
@@ -186,6 +185,9 @@ export default {
             }).catch(error => {
                 console.log(error);
             });
+        },
+        ChaneUrl(id) {
+            window.location.href = '/news-by-id/' + id;
         }
 
     },

@@ -13,6 +13,12 @@ const routes = [
         component:()=>import('../pages/Web/Main/Main.vue')
       },
       {
+        path:'/register',
+        name:'register',
+        component:()=>import('../pages/Web/Auth/Register.vue')
+        
+      },
+      {
         path:'/login',
         name:'login',
         component:()=>import('../pages/Web/Auth/Login.vue')
@@ -40,7 +46,12 @@ const routes = [
         path:'post-detail/:id',
         name:'post-detail',
         component:()=>import('../pages/Web/Post/PostDetail.vue')
-      }
+      },
+      {
+        path:'news-by-id/:id',
+        name:'news-by-id',
+        component:()=>import('../pages/Web/News/NewsById.vue')
+      }     
     ]
   },
   {
@@ -78,7 +89,7 @@ const routes = [
       {
         path:'user',
         name:'user',
-        component:()=>import('../pages/Admin/User/UserView.vue')
+        component:()=>import('../pages/Admin/User/AccoutView.vue')
       },
       {
         path:'post',
@@ -95,7 +106,6 @@ const router = createRouter({
 })
 router.beforeEach((to, from, next) => {
   const isAuthenticated = localStorage.getItem("role")==='true'
-console.log(isAuthenticated);
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!isAuthenticated) {
       next({ name: "main" });
