@@ -23,15 +23,10 @@ const authStore={
       },
     actions: {
         Login(context,data){
-          userId._getUserId().then(res=>{
-            localStorage.setItem('userId', res);
-            context.commit('setUserId',res);
-          }).catch(err=>{
-            console.log(err);
-          }).finally(()=>{
-            localStorage.setItem('token', data);
-            context.commit('setToken',data);
-          })
+          localStorage.setItem('userId', data.userId);
+          context.commit('setUserId',data.userId);
+          localStorage.setItem('token', data.token);
+          context.commit('setToken',data.token);
         },
         ResetToken(context){
           console.log('resetToken');

@@ -69,7 +69,7 @@ export default {
         login() {
             this.openLoading();
             authAPI._login(this.taikhoan).then(res => {
-                this.Login(res.data.token);
+                this.Login(res.data);
                 toast.success(res.data.message)
                 if (res.data.role) {
                     setTimeout(() => {

@@ -21,30 +21,66 @@
             </v-card>
         </div>
         <v-divider class="border-opacity-25 ma-10" inset></v-divider>
-        <div class="ma-4">Bình luận: 0</div>
         <div>
-            <v-virtual-scroll :items="items" height="500" item-height="50">
+            <v-virtual-scroll :items="GetsCommentsById(news.NewsId)" item-height="48" class="ma-4"
+                style="max-height: 700px; overflow-y: auto;">
                 <template v-slot:default="{ item }">
-                    <v-list-item :title="`Employee Name`" :subtitle="`Badge #${item}`">
+                    <v-list-item :title="item.UserId == getuserId ? `Tôi` : `${item.FullName}`"
+                        :subtitle="`${item.CommentContent}`" :item="ol">
                         <template v-slot:prepend>
-                            <v-icon class="bg-primary">mdi-account</v-icon>
+                            <v-icon v-if="item.Avatar === null"
+                                :color="item.UserId == getId ? 'blue' : 'black'">mdi-account</v-icon>
+                            <v-avatar v-else>
+                                <v-img :src="item.Avatar"></v-img>
+                            </v-avatar>
                         </template>
-
                         <template v-slot:append>
-                            <v-btn icon="mdi-pencil" size="x-small" variant="tonal"></v-btn>
+                            <div v-if="item.UserId == getuserId">
+                                <v-btn icon="mdi-pencil" color="black" size="x-small" variant="tonal"
+                                    @click="toggleEditMode(item)"></v-btn>
+                                <v-btn icon="mdi-delete" color="black" size="x-small"
+                                    @click="DeleteComment(item.CommentNewsId)" variant="tonal"></v-btn>
+                            </div>
+                            <v-btn v-else icon="mdi-heart" size="x-small" variant="tonal"></v-btn>
                         </template>
+                        <div class="text-caption">{{ formatDateTime(item.CreateComment) }}</div>
+                        <v-divider></v-divider>
+                        <v-row v-if="item.inEditMode">
+                            <v-col cols="12">
+                                <v-textarea v-model="item.editedComment" label="Chỉnh sửa bình luận"></v-textarea>
+                                <div class="ma-2">
+                                    <v-btn class="mr-1" @click="saveEditedComment(item)">Lưu</v-btn>
+                                    <v-btn class="mr-1" color="red" @click="cancelEdit(item)">Hủy bỏ</v-btn>
+                                </div>
+                            </v-col>
+                        </v-row>
                     </v-list-item>
                 </template>
             </v-virtual-scroll>
+        </div>
+        <div class="ma-4">Bình luận: {{ comments.length }}</div>
+        <div class="mt-4">
+            <v-row>
+                <v-col lg="11" md="6" sm="2">
+                    <v-textarea label="Nhập nội dung bình luận" v-model="comment" clearable></v-textarea>
+                </v-col>
+                <v-col lg="1" md="1" sm="1">
+                    <v-btn v-if="getuserId" color="primary" @click="CommentNews(news.NewsId)">Bình luận</v-btn>
+                    <v-btn v-else class="mb-5 ml-5" @click="ToastMess()">Gửi</v-btn>
+                </v-col>
+            </v-row>
         </div>
     </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import newsAPI from '../../../services/news';
 import imagecontentAPI from '../../../services/imagecontent';
 import newscontentAPI from '../../../services/newscontent';
+import commentsNewsAPI from '../../../services/commentsNews';
+import { useToast } from 'vue-toastification'
+const toast = useToast()
 export default {
     name: 'NewsDetail',
     data() {
@@ -54,8 +90,13 @@ export default {
             newscontent: [],
             imagecontent: [],
             items: Array.from({ length: 50 }, (k, v) => v + 1),
-            userId: ''
+            userId: '',
+            comments: [],
+            comment: ''
         }
+    },
+    computed: {
+        ...mapGetters('authStore', ['getuserId'])
     },
     methods: {
         formatDateTime(dateTimeString) {
@@ -84,6 +125,7 @@ export default {
             this.openLoading();
             newscontentAPI._getAll(this.param).then(res => {
                 this.newscontent = res.data;
+                console.log(res.data);
             }).catch(err => {
                 console.log(err.data);
             }).finally(() => {
@@ -102,11 +144,84 @@ export default {
             const res = this.imagecontent.filter(x => x.NewsContentId === id);
             return res.slice(0, 4);
         },
+        GetsComments() {
+            commentsNewsAPI._getAll().then(res => {
+                console.log(res.data);
+                this.comments = res.data;
+            }).catch(err => {
+                console.log(err.data);
+            })
+        },
+        GetsCommentsById(id) {
+            const data = this.comments.filter(x => x.NewsId == id);
+            return data;
+        },
+        CommentNews(id) {
+            if (this.comment === '') {
+                toast.warning('Vui lòng nhập nội dung')
+            } else {
+                const formData = new FormData();
+                formData.append('CommentNewsId', '0');
+                formData.append('UserId', this.getuserId);
+                formData.append('NewsId', id);
+                formData.append('CommentContent', this.comment)
+                commentsNewsAPI._create(formData).then(res => {
+                    console.log(res.data);
+                    this.GetsComments();
 
+                }).catch(err => {
+                    console.log(err.data);
+                })
+                this.GetsComments();
+                this.GetsCommentsById(id);
+                this.comment = '';
+            }
+        },
+        saveEditedComment(item) {
+            this.openLoading();
+            console.log(item);
+            const formData = new FormData();
+            formData.append('CommentNewsId', item.CommentNewsId);
+            formData.append('UserId', item.UserId);
+            formData.append('NewsId', item.NewsId);
+            formData.append('CommentContent', item.editedComment)
+            commentsNewsAPI._update(item.CommentNewsId, formData).then(res => {
+                console.log(res.data);
+                this.GetsComments();
+                this.GetsCommentsById(item.NewsId);
+            }).catch(error => {
+                console.log(error);
+            });
+            item.inEditMode = false;
+            this.closeLoading();
+        },
+        DeleteComment(id) {
+            this.openLoading();
+            commentsNewsAPI._delete(id).then(res => {
+                console.log(res.data);
+                this.GetsComments();
+            }).catch(error => {
+                console.log(error);
+            });
+            this.closeLoading();
+        },
+        toggleEditMode(item) {
+            item.inEditMode = !item.inEditMode;
+            if (item.inEditMode) {
+                item.editedComment = item.CommentContent;
+            }
+        },
+        cancelEdit(item) {
+            item.inEditMode = false;
+        },
+        ToastMess() {
+            toast.error('Vui lòng đăng nhập');
+        }
     },
     mounted() {
         this.param = this.$route.params.id;
         this.GetDetailNews();
+        this.GetsComments();
     }
 }
 </script>

@@ -57,7 +57,6 @@ export default {
             postAPI._getAlls()
                 .then(res => {
                     this.posts = res.data.slice(0, 5);
-                    console.log(this.posts)
                 })
                 .catch(err => {
                     console.error(err);
@@ -70,7 +69,6 @@ export default {
         GetImagePost() {
             imagepostAPI._getAll()
                 .then(res => {
-                    console.log(res.data);
                     this.imagepost = res.data;
                 })
                 .catch(err => {
