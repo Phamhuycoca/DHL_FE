@@ -16,8 +16,8 @@ const noticationAPI = {
   async _delete(id) {
     return await apiClient.delete(`Notication/${id}`);
   },
-  async _getById(id) {
-    return await apiClient.get(`Notication/${id}`);
+  async _seenNoti(id) {
+    return await apiClient.put(`Notication/SeenNoti/${id}`);
   }
 };
 

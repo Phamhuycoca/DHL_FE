@@ -48,6 +48,7 @@ const routes = [
     name:'admin',
     redirect: "/admin/dashboard",
     component:()=>import ('../views/AdminView.vue'),
+    meta: { requiresAuth: true },
     children:[
       {
         path:'dashboard',
@@ -92,5 +93,21 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
-
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem("role")==='true'
+console.log(isAuthenticated);
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (!isAuthenticated) {
+      next({ name: "main" });
+    } else {
+      next();
+    }
+  } else {
+    if (isAuthenticated && to.name !== "true") {
+      next({ name: "admin" });
+    } else {
+      next();
+    }
+  }
+});
 export default router
