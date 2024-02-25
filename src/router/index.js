@@ -24,6 +24,11 @@ const routes = [
         component:()=>import('../pages/Web/Auth/Login.vue')
       },
       {
+        path:'/forgot',
+        name:'forgot',
+        component:()=>import('../pages/Web/Auth/Fogot.vue')
+      },
+      {
         path:'/news-detail/:id',
         component:()=>import('../pages/Web/News/NewsDetail.vue')
       },

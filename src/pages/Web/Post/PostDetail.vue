@@ -47,8 +47,7 @@
                             <v-icon v-if="item.Avatar === null"
                                 :color="item.UserId == getId ? 'blue' : 'black'">mdi-account</v-icon>
                             <v-avatar v-else>
-                                <v-img
-                                    src="https://platinumlist.net/guide/wp-content/uploads/2023/03/8359_img_worlds_of_adventure-big1613913137.jpg-1024x683.webp"></v-img>
+                                <v-img :src="item.Avatar"></v-img>
                             </v-avatar>
                         </template>
                         <template v-slot:append>
